@@ -32,6 +32,21 @@ app.post("/api/notes", (req, res) => {
   });
 });
 
+app.delete("/api/notes/:id", (req, res) => {
+  fs.readFile("./db/db.json", "utf8", (err, data) => {
+    const chosen = req.params.id;
+    let noteData = JSON.parse(data);
+
+    const indexNo = noteData.findIndex((x) => x.id == chosen);
+    console.log(indexNo, typeof indexNo);
+
+    noteData.splice(indexNo, 1);
+    modifyDB(noteData);
+
+    return res.send();
+  });
+});
+
 function modifyDB(modify) {
   fs.writeFile("./db/db.json", JSON.stringify(modify), (err) => {
     if (err) throw err;
